@@ -1,7 +1,7 @@
 # 🏥 Fetal Healthcare Data — Project README
 
-![Dashboard](https://img.shields.io/badge/Excel-Dashboard-blue) ![Records](https://img.shields.io/badge/Records-2126-green) ![Features](https://img.shields.io/badge/Features-22-orange)
-
+![Dashboard](<img width="1919" height="720" alt="Screenshot 2026-01-22 185013" src="https://github.com/user-attachments/assets/35b65b15-9cc4-4c1f-be65-1d7ea1b4d7d0" />
+) 
 ---
 
 ## 📌 Project Overview
@@ -222,9 +222,9 @@ Raw CTG Data (fetal_health sheet)
 ---
 
 ## 👤 Author
+Sunday Abdulsalam
+Linkedin: https://www.linkedin.com/in/sundayabdulsalam/
 
-Dashboard and analysis developed as part of a fetal health monitoring and data analytics project. Social links visible in the dashboard footer (Twitter / LinkedIn).
 
 ---
 
-*README auto-generated from workbook analysis — February 2026*
