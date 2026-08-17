@@ -1,0 +1,218 @@
+# Preconception Exposure RNA-seq Analysis in Mice
+
+## Project Overview
+
+This project investigates the transcriptomic consequences of maternal preconception exposure to metabolism-disrupting environmental factors in first-generation (F1) mouse offspring.
+
+The study uses RNA-seq data to investigate whether exposure before conception is associated with persistent changes in gene expression and biological pathways related to metabolism and disease.
+
+The analysis focuses on two metabolically important tissues:
+
+- Gonadal white adipose tissue (GWAT)
+- Liver
+
+Samples were obtained from 11-week-old F1 female and male mice.
+
+---
+
+## Research Question
+
+Does maternal preconception exposure to environmental metabolism disruptors alter gene expression and biological pathways in F1 offspring?
+
+The analysis aims to identify:
+
+- Differentially expressed genes
+- Altered biological processes
+- Dysregulated molecular pathways
+- Tissue-specific transcriptomic responses
+- Sex-specific transcriptional responses
+- Potential metabolic and disease-related signatures
+
+---
+
+## Experimental Design
+
+The dataset contains multiple exposure groups, sexes, tissues, and biological replicates.
+
+### Experimental Factors
+
+| Factor | Categories |
+|---|---|
+| Exposure | Multiple treatment groups and control |
+| Generation | F1 offspring |
+| Sex | Male, Female |
+| Tissue | Liver, GWAT |
+| Replicates | Biological replicates |
+
+The experimental design allows investigation of both exposure-associated and sex/tissue-specific transcriptional effects.
+
+---
+
+## Analysis Workflow
+
+The project follows a reproducible RNA-seq analysis workflow:
+
+```text
+RNA-seq Data
+     |
+     v
+Data Preparation
+     |
+     v
+Quality Control
+     |
+     v
+Read/Count Assessment
+     |
+     v
+Experimental Design
+     |
+     v
+Differential Expression Analysis
+     |
+     v
+Significant Gene Identification
+     |
+     v
+Gene ID Conversion
+     |
+     v
+GO Enrichment Analysis
+     |
+     v
+KEGG / Pathway Analysis
+     |
+     v
+Biological Interpretation
+     |
+     v
+Visualization
+
+
+Software and Tools
+
+The analysis uses:
+
+R
+RStudio
+Bioconductor
+DESeq2
+clusterProfiler
+org.Mm.eg.db
+enrichplot
+ggplot2
+dplyr
+readr
+Differential Expression Analysis
+
+Differential expression analysis is performed using DESeq2.
+
+Genes are evaluated based on:
+
+Log2 fold change
+Adjusted p-value
+Statistical significance
+
+The analysis identifies genes whose expression differs between exposure and control groups.
+
+Functional Enrichment Analysis
+
+Significant genes are investigated using functional enrichment analysis.
+
+Gene Ontology
+
+The following GO categories are investigated:
+
+Biological Process (BP)
+Molecular Function (MF)
+Cellular Component (CC)
+Pathway Analysis
+
+KEGG pathway enrichment is used to identify biological pathways potentially affected by preconception exposure.
+
+Visualization
+
+The project includes several visualization approaches:
+
+PCA plots
+MA plots
+Volcano plots
+Heatmaps
+GO enrichment plots
+KEGG pathway plots
+Gene expression plots
+
+These visualizations are used to assess sample relationships, differential expression, and biological interpretation.
+
+Biological Interpretation
+
+The analysis is designed to investigate transcriptomic changes associated with:
+
+Energy metabolism
+Lipid metabolism
+Glucose metabolism
+Adipose tissue biology
+Liver function
+Inflammatory processes
+Stress responses
+Metabolic disease
+Other exposure-associated biological processes
+
+Importantly, enrichment results are interpreted as associations within the transcriptomic data and do not by themselves establish biological causation.
+
+Reproducibility
+
+All analyses are performed using scripted R workflows wherever possible.
+
+The project structure is organized to separate:
+
+data/
+scripts/
+results/
+figures/
+README.md
+
+This allows the analysis to be reproduced and updated as additional analyses are performed.
+
+Project Status
+Completed
+RNA-seq dataset preparation
+Initial data exploration
+Differential expression analysis
+Significant gene identification
+Gene ID conversion
+GO enrichment analysis
+Initial pathway enrichment analysis
+In Progress
+Interpretation of enriched biological pathways
+Visualization refinement
+Tissue-specific analysis
+Sex-specific analysis
+Biological interpretation
+Final documentation
+Future Analysis
+
+Planned analyses include:
+
+Tissue-specific differential expression
+Sex-specific differential expression
+Exposure-specific comparisons
+Gene expression heatmaps
+Additional pathway analysis
+Identification of key candidate genes
+Integration of results across tissues and sexes
+Project Significance
+
+Environmental exposures before conception may have consequences that persist into subsequent generations.
+
+By applying transcriptomic and functional enrichment approaches, this project aims to characterize molecular changes associated with maternal preconception exposure and provide insight into potential mechanisms underlying long-term metabolic effects.
+
+Author
+
+Sunday Abdulsalam
+
+Bioinformatics | Computational Biology | Molecular Biology | Data Analytics
+
+License
+
+This project is intended for research and educational purposes.
