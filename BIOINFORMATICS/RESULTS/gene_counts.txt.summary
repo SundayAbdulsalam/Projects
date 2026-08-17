@@ -1,0 +1,15 @@
+Status	alignment_bamfile/female_gwat_50tbt_1.sorted.bam	alignment_bamfile/female_gwat_50tbt_2.sorted.bam	alignment_bamfile/female_gwat_50tbt_3.sorted.bam	alignment_bamfile/female_gwat_dmso_1.sorted.bam	alignment_bamfile/female_gwat_dmso_2.sorted.bam	alignment_bamfile/female_gwat_dmso_3.sorted.bam
+Assigned	5185987	5396202	5421582	4451239	4073790	4424416
+Unassigned_Unmapped	141410	105833	156966	158577	136233	101708
+Unassigned_Read_Type	0	0	0	0	0	0
+Unassigned_Singleton	0	0	0	0	0	0
+Unassigned_MappingQuality	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0
+Unassigned_MultiMapping	1168651	1194575	1164993	1051185	1264553	1018588
+Unassigned_Secondary	0	0	0	0	0	0
+Unassigned_NonSplit	0	0	0	0	0	0
+Unassigned_NoFeatures	370767	282423	250283	318811	345150	237644
+Unassigned_Overlapping_Length	0	0	0	0	0	0
+Unassigned_Ambiguity	658001	692991	714145	536498	501550	571342
