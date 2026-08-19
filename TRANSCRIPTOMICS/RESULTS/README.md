@@ -85,7 +85,7 @@ DEG annotation
 GO / KEGG enrichment
   ↓
 Biological interpretation
-________________________________________
+
 Tools and Technologies
 Operating System
 •	Ubuntu Linux 
@@ -108,7 +108,7 @@ Planned functional analysis
 •	clusterProfiler 
 •	org.Mm.eg.db 
 •	enrichplot 
-________________________________________
+
 1. Quality Control
 FastQC was used to evaluate the quality of the raw paired-end sequencing reads.
 Quality metrics examined included:
@@ -124,7 +124,7 @@ fastqc SRR37636083_1.fastq \
 SRR37636083_2.fastq \
 -o qc_report \
 -t 2
-________________________________________
+
 2. Reference Genome
 The mouse reference genome used for alignment was:
 Mus musculus GRCm39
@@ -133,13 +133,13 @@ Mus_musculus.GRCm39.dna.primary_assembly.fa
 Mus_musculus.GRCm39.116.gtf
 The FASTA file provides the genomic sequence used by HISAT2.
 The GTF annotation provides gene and exon coordinates used by featureCounts.
-________________________________________
+
 3. HISAT2 Indexing
 The reference genome was indexed using HISAT2:
 hisat2-build \
 Mus_musculus.GRCm39.dna.primary_assembly.fa \
 hisat2_indexfiles/ref_genome_index
-________________________________________
+
 4. RNA-seq Alignment
 Paired-end reads were aligned to the GRCm39 reference genome using HISAT2.
 Example:
@@ -151,7 +151,7 @@ hisat2 -p 2 \
 Six samples were aligned:
 3 DMSO
 3 TBT
-________________________________________
+
 5. SAM/BAM Processing
 SAM files were converted to sorted BAM files using Samtools.
 Example:
@@ -161,7 +161,7 @@ female_gwat_dmso_2.sam
 BAM files were indexed:
 samtools index female_gwat_dmso_2.sorted.bam
 Sorted and indexed BAM files were used for downstream quantification.
-________________________________________
+
 6. Gene Quantification
 Gene-level read counts were generated using featureCounts.
 The analysis used the mouse GRCm39.116 GTF annotation.
@@ -184,7 +184,7 @@ alignment_bamfile/female_gwat_50tbt_3.sorted.bam \
 alignment_bamfile/female_gwat_dmso_1.sorted.bam \
 alignment_bamfile/female_gwat_dmso_2.sorted.bam \
 alignment_bamfile/female_gwat_dmso_3.sorted.bam
-________________________________________
+
 7. Differential Expression Analysis
 Differential expression was performed using DESeq2.
 The experimental design was:
@@ -196,7 +196,7 @@ The comparison was:
 TBT vs DMSO
 Genes were considered significantly differentially expressed when:
 adjusted p-value < 0.05
-________________________________________
+
 Results
 Differential Expression
 The analysis tested:
@@ -207,7 +207,7 @@ Distribution:
 Upregulated:     4
 Downregulated:  20
 This indicates that the selected TBT exposure condition was associated with predominantly decreased expression among the statistically significant genes detected in this small dataset.
-________________________________________
+
 Selected Differentially Expressed Genes
 Gene	log2FC	Direction
 Ccl21a	+2.67	Upregulated
@@ -220,7 +220,7 @@ Pdk4	-2.08	Downregulated
 Anpep	+1.01	Upregulated
 Cyp2f2	+1.28	Upregulated
 Ank3	+2.91	Upregulated
-________________________________________
+
 DEG Annotation
 The 24 significant DEGs were annotated with:
 •	Ensembl gene ID 
@@ -238,7 +238,7 @@ ENSMUSG00000053897 → Slc39a8
 ENSMUSG00000031765 → Mt1
 ENSMUSG00000006014 → Prg4
 ENSMUSG00000055320 → Tead1
-________________________________________
+
 Visualization
 The analysis includes:
 PCA
@@ -253,8 +253,8 @@ Used to visualize:
 •	Downregulated genes 
 Heatmap
 Used to visualize expression patterns of significant DEGs across the six samples.
-________________________________________
-Output Files
+
+## Output Files
 Important generated files include:
 gene_counts_paired.txt
 
@@ -275,8 +275,8 @@ visualizations/Significant_DEGs_final.csv
 annotation/DEG_TBT_vs_DMSO_annotated.csv
 
 annotation/DEG_TBT_vs_DMSO_portfolio.csv
-________________________________________
-Limitations
+
+## Limitations
 This project intentionally uses a small subset of the original experimental dataset for computational portfolio purposes.
 Important limitations include:
 1.	Only six samples were analyzed. 
@@ -287,7 +287,7 @@ Important limitations include:
 6.	The analysis does not represent the complete experimental design. 
 7.	Differential expression findings should therefore be interpreted as exploratory rather than definitive biological conclusions. 
 8.	Functional enrichment results may be sensitive to the relatively small number of significant DEGs. 
-________________________________________
+
 Current Status
 Completed
 •	FASTQ acquisition 
@@ -336,12 +336,12 @@ R / Bioconductor
 •	Bioconductor package management 
 •	Statistical analysis 
 •	Data visualization 
-________________________________________
-Conclusion
+
+### Conclusion
 This project demonstrates an end-to-end bulk RNA-seq workflow from raw sequencing reads to differential gene expression and gene annotation.
 The focused analysis of female mouse GWAT identified 24 statistically significant genes following comparison of 50 nM TBT-treated samples with DMSO controls, with 20 genes showing decreased expression and 4 showing increased expression.
 The next stage of the project will investigate whether these differentially expressed genes converge on biological processes or pathways relevant to metabolism, adipose tissue biology, environmental exposure responses, and related cellular processes.
-________________________________________
+
 Author
 Sunday Abdulsalam
 Bioinformatics | Computational Biology | Data Analytics
@@ -352,7 +352,7 @@ Interested in:
 •	AI for health 
 •	Data science 
 •	Molecular biology 
-________________________________________
+
 Disclaimer
 This repository represents a computational portfolio analysis using a selected subset of publicly available RNA-seq data. The analysis is intended to demonstrate bioinformatics methodology and should not be interpreted as a complete reproduction of the original experimental study or as definitive evidence of biological causation.
 
