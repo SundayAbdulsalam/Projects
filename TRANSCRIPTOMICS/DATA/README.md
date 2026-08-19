@@ -1,9 +1,9 @@
 ## Getting raw data from NCBI
 The prefetch command was used to download the samples from NCBI while the fastq-dump --split-files was used to separate the samples into the forward and reverse reads.
   ## DMSO Samples
-prefetch SRR37636080
-fastq-dump --split-files SRR37636080
-prefetch SRR37636083
+<>prefetch SRR37636080
+<>fastq-dump --split-files SRR37636080
+<>prefetch SRR37636083
 fastq-dump --split-files SRR37636083
 prefetch SRR37636086
 fastq-dump --split-files SRR37636083
