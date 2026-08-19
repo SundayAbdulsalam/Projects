@@ -1,17 +1,33 @@
 # 🧬 RNA-seq Analysis of Preconception Tributyltin Exposure in Mouse Gonadal White Adipose Tissue
 
+## Project Overview
+This project investigates the transcriptomic consequences of maternal preconception exposure to metabolism-disrupting environmental factors in first-generation (F1) mouse offspring.
+The study uses RNA-seq data to investigate whether exposure before conception is associated with persistent changes in gene expression and biological pathways related to metabolism and disease.
+
+The analysis focuses on metabolically important tissues:
+- Gonadal white adipose tissue (GWAT)
+
+Samples were obtained from 11-week-old F1 female and male mice.
+
+---
+## Research Question
+Does maternal preconception exposure to environmental metabolism disruptors alter gene expression and biological pathways in F1 offspring?
+
+The analysis aims to identify:
+- Differentially expressed genes
+- Altered biological processes
+- Dysregulated molecular pathways
+- Tissue-specific transcriptomic responses
+- Sex-specific transcriptional responses
+- Potential metabolic and disease-related signatures
+---
+
 **Female GWAT:**
 
 - 3 DMSO control samples
 - 3 TBT-treated samples
 
 The analysis therefore focuses specifically on the transcriptional difference between the TBT and DMSO groups.
-
----
-
-# Research Question
-
-> What transcriptional changes are observed in female mouse gonadal white adipose tissue following exposure to 50 nM tributyltin compared with DMSO controls?
 
 ---
 
