@@ -94,14 +94,13 @@ alignment_bamfile/female_gwat_dmso_1.sorted.bam \
 alignment_bamfile/female_gwat_dmso_2.sorted.bam \
 alignment_bamfile/female_gwat_dmso_3.sorted.bam
 ```
-  ##Generation of DESeq2 Count Matrix
+  ## Generation of Count Matrix
 
 Following gene-level read quantification with featureCounts, the relevant columns containing gene identifiers and read counts for all six RNA-seq samples were extracted to create a clean count matrix for downstream differential expression analysis.
 ```bash
 cut -f1,7-12 gene_counts_paired.txt > counts_matrix.tsv
 ```
-  ##
-Creation of Sample Metadata
+  ## Creation of Sample Metadata
 A sample metadata file was created to define the sample names and experimental conditions for the six RNA-seq samples. This metadata is required by DESeq2 to correctly assign samples to the treatment and control groups during differential expression analysis.
 ```bash
 cat > sample_metadata.csv << 'EOF'
