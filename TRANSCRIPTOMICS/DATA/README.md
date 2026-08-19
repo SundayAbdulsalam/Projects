@@ -36,10 +36,27 @@ fastqc SRR37636110_1.fastq SRR37636110_2.fastq -o qc_report
 fastqc SRR37636113_1.fastq SRR37636113_2.fastq -o qc_report
 fastqc SRR37636116_1.fastq SRR37636116_2.fastq -o qc_report
 ```
-
-
-
-
-
-
-
+## ALIGNMENT
+Mus_musculus.GRCm39.dna.primary_assembly.fa.gz used as the reference genome for the study was collected from ensembl database  (https://ftp.ensembl.org/pub/current/fasta/mus_musculus/dna/), reference index file was built from the reference genome using hisat2, then subsequent alignment was performed on the samples.
+  ## Downloading the reference genome
+```bash
+wget https://ftp.ensembl.org/pub/current/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
+unzip Mus_musculus.GRCm39.dna.primary_assembly.zip
+```
+  ## Building the index files
+```bash
+hisat2-build Mus_musculus.GRCm39.dna.primary_assembly.fa hisat2_indexFiles
+```
+  ## Performing alignment
+  ## DMSO Samples
+```bash
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636080_1.fastq -2 SRR37636080_2.fastq | samtools sort -@ 2 -o female_gwat_dmso_1.sorted.ba  
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636083_1.fastq -2 SRR37636083_2.fastq | samtools sort -@ 2 -o female_gwat_dmso_1.sorted.ba  
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636086_1.fastq -2 SRR37636086_2.fastq | samtools sort -@ 2 -o female_gwat_dmso_1.sorted.ba
+```
+   ## 50TBT Samples
+```bash
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636110_1.fastq -2 SRR37636110_2.fastq | samtools sort -@ 2 -o female_gwat_50tbt_1.sorted.ba
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636113_1.fastq -2 SRR37636113_2.fastq | samtools sort -@ 2 -o female_gwat_50tbt_1.sorted.ba
+hisat2 -p 2 -x hisat2_indexfiles/ref_genome_index -1 SRR37636116_1.fastq -2 SRR37636116_2.fastq | samtools sort -@ 2 -o female_gwat_50tbt_1.sorted.ba
+```
