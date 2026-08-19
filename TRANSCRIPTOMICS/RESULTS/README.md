@@ -254,7 +254,7 @@ Used to visualize:
 Heatmap
 Used to visualize expression patterns of significant DEGs across the six samples.
 
-## Output Files
+Output Files
 Important generated files include:
 gene_counts_paired.txt
 
@@ -276,7 +276,7 @@ annotation/DEG_TBT_vs_DMSO_annotated.csv
 
 annotation/DEG_TBT_vs_DMSO_portfolio.csv
 
-## Limitations
+Limitations
 This project intentionally uses a small subset of the original experimental dataset for computational portfolio purposes.
 Important limitations include:
 1.	Only six samples were analyzed. 
@@ -337,7 +337,7 @@ R / Bioconductor
 •	Statistical analysis 
 •	Data visualization 
 
-### Conclusion
+Conclusion
 This project demonstrates an end-to-end bulk RNA-seq workflow from raw sequencing reads to differential gene expression and gene annotation.
 The focused analysis of female mouse GWAT identified 24 statistically significant genes following comparison of 50 nM TBT-treated samples with DMSO controls, with 20 genes showing decreased expression and 4 showing increased expression.
 The next stage of the project will investigate whether these differentially expressed genes converge on biological processes or pathways relevant to metabolism, adipose tissue biology, environmental exposure responses, and related cellular processes.
