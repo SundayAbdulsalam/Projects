@@ -344,6 +344,8 @@ The next stage of the project will investigate whether these differentially expr
 
 Author
 Sunday Abdulsalam
+Linkedin: https://www.linkedin.com/in/sundayabdulsalam/
+Email: abdulsalamsunday@yahoo.com
 Bioinformatics | Computational Biology | Data Analytics
 Interested in:
 •	Transcriptomics 
