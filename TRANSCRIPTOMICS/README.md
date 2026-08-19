@@ -153,34 +153,6 @@ Reproducibility
 
 All analyses are performed using scripted R workflows wherever possible.
 
-The project structure is organized to separate:
-
-data/
-scripts/
-results/
-figures/
-README.md
-
-This allows the analysis to be reproduced and updated as additional analyses are performed.
-
-Project Status
-Completed
-RNA-seq dataset preparation
-Initial data exploration
-Differential expression analysis
-Significant gene identification
-Gene ID conversion
-GO enrichment analysis
-Initial pathway enrichment analysis
-In Progress
-Interpretation of enriched biological pathways
-Visualization refinement
-Tissue-specific analysis
-Sex-specific analysis
-Biological interpretation
-Final documentation
-Future Analysis
-
 Planned analyses include:
 
 Tissue-specific differential expression
