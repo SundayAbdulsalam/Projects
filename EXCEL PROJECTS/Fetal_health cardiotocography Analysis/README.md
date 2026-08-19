@@ -39,8 +39,6 @@ The Excel file contains **4 sheets**:
 | 2 | Suspect Case | 295 | 13.9% |
 | 3 | Pathological Case | 176 | 8.3% |
 
-> ⚠️ The dataset is **imbalanced** — Normal cases dominate. Any machine learning model trained on this data should account for class imbalance (e.g., using SMOTE, class weights, or stratified sampling).
-
 ---
 
 ## 🔬 Feature Descriptions
