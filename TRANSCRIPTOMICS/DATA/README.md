@@ -72,3 +72,45 @@ do
     samtools index "$bam"
 done
 ```
+### Gene-Level Read Quantification with featureCounts
+
+Following alignment QC, gene-level read counts were generated from the
+sorted BAM files using `featureCounts`.
+
+```bash
+featureCounts -T 2 \
+-p \
+--countReadPairs \
+-B \
+-C \
+-t exon \
+-g gene_id \
+-a annotation/Mus_musculus.GRCm39.116.gtf \
+-o gene_counts_paired.txt \
+alignment_bamfile/female_gwat_50tbt_1.sorted.bam \
+alignment_bamfile/female_gwat_50tbt_2.sorted.bam \
+alignment_bamfile/female_gwat_50tbt_3.sorted.bam \
+alignment_bamfile/female_gwat_dmso_1.sorted.bam \
+alignment_bamfile/female_gwat_dmso_2.sorted.bam \
+alignment_bamfile/female_gwat_dmso_3.sorted.bam
+```
+  ##Generation of DESeq2 Count Matrix
+
+Following gene-level read quantification with featureCounts, the relevant columns containing gene identifiers and read counts for all six RNA-seq samples were extracted to create a clean count matrix for downstream differential expression analysis.
+```bash
+cut -f1,7-12 gene_counts_paired.txt > counts_matrix.tsv
+```
+  ##
+Creation of Sample Metadata
+A sample metadata file was created to define the sample names and experimental conditions for the six RNA-seq samples. This metadata is required by DESeq2 to correctly assign samples to the treatment and control groups during differential expression analysis.
+```bash
+cat > sample_metadata.csv << 'EOF'
+sample,condition
+50TBT_1,50TBT
+50TBT_2,50TBT
+50TBT_3,50TBT
+DMSO_1,DMSO
+DMSO_2,DMSO
+DMSO_3,DMSO
+EOF
+```
