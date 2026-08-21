@@ -1,5 +1,3 @@
-# README
-
 ## COVID-19 Genome and Protein Structure Analysis Using Python
 
 ## Overview
@@ -352,8 +350,9 @@ The project produces the following outputs:
 
 ## Author
 
-**ABS**
-
+**Sunday Abdulsalam**
+Email: abdulsalamsunday@yahoo.com
+Linkedin:
 ## License
 
 This project is intended for educational and research purposes.
