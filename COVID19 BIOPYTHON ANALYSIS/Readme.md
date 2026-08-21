@@ -1,4 +1,4 @@
-## COVID-19 Genome and Protein Structure Analysis Using Python
+## 🧬 COVID-19 Genome and Protein Structure Analysis Using Python
 
 ## Overview
 
