@@ -351,8 +351,23 @@ The project produces the following outputs:
 ## Author
 
 **Sunday Abdulsalam**
+Linkedin: https://www.linkedin.com/in/sundayabdulsalam/
 Email: abdulsalamsunday@yahoo.com
-Linkedin:
-## License
+Bioinformatics | Computational Biology | Data Analytics
+Interested in:
+•	Transcriptomics 
+•	Cancer genomics 
+•	Computational biology 
+•	AI for health 
+•	Data science 
+•	Molecular biology 
 
-This project is intended for educational and research purposes.
+# Disclaimer
+
+This project was developed for **educational and research purposes only**. The analyses, results, visualizations, and interpretations produced by this project should not be considered medical, clinical, diagnostic, or professional advice.
+
+The genome and protein data used in this project are obtained from publicly available biological databases and resources. The accuracy and completeness of results depend on the quality of the source data, selected parameters, software versions, and computational methods used.
+
+This project is intended to demonstrate bioinformatics concepts such as genome analysis, sequence transcription and translation, amino acid analysis, protein sequence extraction, BLAST searches, PDB structure analysis, and molecular visualization.
+
+
