@@ -156,12 +156,11 @@ dir.create(
     showWarnings = FALSE
 )
 ```
-Step 1: Import Differential Expression Results
+### Step 1: Import Differential Expression Results
 
 The analysis begins with the significant DEGs identified from the DESeq2 analysis.
 
 Expected input:
-
 DEG_TBT_vs_DMSO_significant.csv
 
 Example R code:
@@ -176,10 +175,9 @@ head(deg_results)
 dim(deg_results)
 ```
 The project contains:
-
 24 significant DEGs
 
-Step 2: Prepare STRINGdb
+### Step 2: Prepare STRINGdb
 
 STRINGdb was configured for:
 
@@ -188,9 +186,9 @@ Taxonomy ID: 10090
 STRING version: 12.0
 
 Initialize STRINGdb:
-
-library(STRINGdb)
 ```
+library(STRINGdb)
+
 string_db <- STRINGdb$new(
     version = "12.0",
     species = 10090,
@@ -209,7 +207,7 @@ Expected:
 
 [1] 10090
 
-Step 3: Map Genes to STRING Proteins
+### Step 3: Map Genes to STRING Proteins
 
 The Entrez IDs from the DEG annotation were mapped to STRING protein identifiers.
 ```
@@ -235,7 +233,7 @@ The initial mapping identified:
 The final protein mapping contained:
 20 proteins
 
-Step 4: Create Final STRING Protein Mapping
+### Step 4: Create Final STRING Protein Mapping
 
 The mapped and previously annotated proteins were combined:
 ```
@@ -270,7 +268,7 @@ write.csv(
 )
 ```
 
-Step 5: Retrieve STRING Protein Information
+### Step 5: Retrieve STRING Protein Information
 ```
 string_proteins <- string_db$get_proteins()
 
@@ -289,7 +287,7 @@ sum(
 Expected:
 20
 
-Step 6: Obtain STRING Interaction Network
+### Step 6: Obtain STRING Interaction Network
 ```
 ppi <- string_db$get_interactions(
     hits
@@ -397,13 +395,16 @@ expanded_edges_clean <- expanded_edges_clean[
 ]
 ```
 Save:
-
+```
 write.csv(
     expanded_edges_clean,
     "protein_enrichment/results/STRING_expanded_PPI_edges_clean.csv",
     row.names = FALSE
 )
-Step 11: Construct the Clean Network
+```
+
+### Step 11: Construct the Clean Network
+```
 clean_graph <- graph_from_data_frame(
     expanded_edges_clean[
         ,
@@ -411,7 +412,7 @@ clean_graph <- graph_from_data_frame(
     ],
     directed = FALSE
 )
-
+```
 Network size:
 
 vcount(clean_graph)
@@ -419,10 +420,11 @@ vcount(clean_graph)
 ecount(clean_graph)
 
 Final expanded network:
-
 47 proteins
 128 unique interactions
-Step 12: Identify Connected Components
+
+### Step 12: Identify Connected Components
+```
 components_info <- components(
     clean_graph
 )
@@ -430,17 +432,17 @@ components_info <- components(
 table(
     components_info$csize
 )
+```
 
 The network contained:
-
 43-node component
 2-node component
 2-node component
 
-Therefore, the largest connected component contained:
+Therefore, the largest connected component contained: 43 proteins
 
-43 proteins
-Step 13: Extract the Giant Component
+### Step 13: Extract the Giant Component
+```
 largest_component <- which.max(
     components_info$csize
 )
@@ -454,65 +456,68 @@ giant_graph <- induced_subgraph(
     clean_graph,
     vids = largest_nodes
 )
-
+```
 Check:
-
+```
 vcount(giant_graph)
 
 ecount(giant_graph)
-
+```
 This produces the principal 43-protein interaction network.
 
-Step 14: Calculate Network Centrality
+### Step 14: Calculate Network Centrality
 
 Degree:
-
+```
 giant_degree <- degree(
     giant_graph,
     mode = "all"
 )
-
+```
 Betweenness:
-
+```
 giant_betweenness <- betweenness(
     giant_graph,
     directed = FALSE,
     normalized = TRUE
 )
-
+```
 Closeness:
-
+```
 giant_closeness <- closeness(
     giant_graph,
     normalized = TRUE
 )
-
+```
 Create hub table:
-
+```
 giant_hubs <- data.frame(
     STRING_id = names(giant_degree),
     degree = as.numeric(giant_degree),
     betweenness = as.numeric(giant_betweenness),
     closeness = as.numeric(giant_closeness)
 )
-Step 15: Annotate Network Proteins
+```
+### Step 15: Annotate Network Proteins
+```
 giant_hubs <- giant_hubs %>%
     left_join(
         protein_annotation,
         by = "STRING_id"
     )
-
+```
 Identify DEGs:
-
+```
 giant_hubs$DEG <- ifelse(
     giant_hubs$STRING_id %in% hits,
     "DEG",
     "First_shell"
 )
-Step 16: Calculate Hub Score
+```
+### Step 16: Calculate Hub Score
 
 Centrality measures were normalized:
-
+```
 giant_hubs$degree_norm <-
     giant_hubs$degree /
     max(
@@ -533,9 +538,9 @@ giant_hubs$closeness_norm <-
         giant_hubs$closeness,
         na.rm = TRUE
     )
-
+```
 Hub score:
-
+```
 giant_hubs$hub_score <- rowMeans(
     giant_hubs[
         ,
@@ -547,24 +552,27 @@ giant_hubs$hub_score <- rowMeans(
     ],
     na.rm = TRUE
 )
-
+```
 Rank:
-
+```
 giant_hubs <- giant_hubs[
     order(
         giant_hubs$hub_score,
         decreasing = TRUE
     ),
 ]
-
+```
 Save:
-
+```
 write.csv(
     giant_hubs,
     "protein_enrichment/results/STRING_giant_component_hub_analysis.csv",
     row.names = FALSE
 )
-Step 17: Identify DEG Network Hubs
+```
+
+### Step 17: Identify DEG Network Hubs
+```
 giant_deg_hubs <- giant_hubs[
     giant_hubs$DEG == "DEG",
 ]
@@ -575,7 +583,10 @@ giant_deg_hubs <- giant_deg_hubs[
         decreasing = TRUE
     ),
 ]
-Step 18: Integrate Network Results with DESeq2
+```
+
+### Step 18: Integrate Network Results with DESeq2
+```
 giant_deg_hubs_full <- giant_deg_hubs %>%
     left_join(
         final_string_map[
@@ -591,31 +602,31 @@ giant_deg_hubs_full <- giant_deg_hubs %>%
         ],
         by = "STRING_id"
     )
-
+```
 Save:
-
+```
 write.csv(
     giant_deg_hubs_full,
     "protein_enrichment/results/STRING_DEG_giant_component_hubs.csv",
     row.names = FALSE
 )
-Step 19: PPI Enrichment
+```
+### Step 19: PPI Enrichment
 
 STRING PPI enrichment was calculated using:
-
+```
 ppi_enrichment <- string_db$get_ppi_enrichment(
     hits
 )
-
+```
 The result was:
-
 Observed interactions = 4
 Expected interactions ≈ 1
 Enrichment statistic = 0.0225
 Lambda = 1
 
 Save:
-
+```
 write.csv(
     data.frame(
         enrichment = ppi_enrichment$enrichment,
@@ -625,13 +636,15 @@ write.csv(
     "protein_enrichment/results/STRING_PPI_enrichment.csv",
     row.names = FALSE
 )
-Step 20: Functional Enrichment
+```
+### Step 20: Functional Enrichment
+```
 enrichment <- string_db$get_enrichment(
     hits
 )
-
+```
 Significant terms:
-
+```
 enrichment_sig <- enrichment[
     enrichment$fdr < 0.05,
 ]
@@ -641,15 +654,17 @@ enrichment_sig <- enrichment_sig[
         enrichment_sig$fdr
     ),
 ]
-
+```
 Save:
-
+```
 write.csv(
     enrichment_sig,
     "protein_enrichment/results/STRING_significant_enrichment.csv",
     row.names = FALSE
 )
-Step 21: GO Biological Process
+```
+### Step 21: GO Biological Process
+```
 go_process <- enrichment_sig[
     enrichment_sig$category == "Process",
 ]
@@ -659,23 +674,23 @@ go_process <- go_process[
         go_process$fdr
     ),
 ]
-
+```
 Save:
-
+```
 write.csv(
     go_process,
     "protein_enrichment/results/STRING_GO_Biological_Process.csv",
     row.names = FALSE
 )
-
+```
 Significant GO Biological Processes included:
-
 Cellular zinc ion homeostasis
 Cellular response to chemical stimulus
-Step 22: Reactome Enrichment
+
+### Step 22: Reactome Enrichment
 
 STRING Reactome terms are identified using the RCTM category.
-
+```
 reactome <- enrichment_sig[
     enrichment_sig$category == "RCTM",
 ]
@@ -685,25 +700,27 @@ reactome <- reactome[
         reactome$fdr
     ),
 ]
-
+```
 Save:
-
+```
 write.csv(
     reactome,
     "protein_enrichment/results/STRING_Reactome_enrichment.csv",
     row.names = FALSE
 )
-
+```
 Important enriched pathways included:
-
 Phase I functionalization of compounds
+
 Cytochrome P450-related pathways
 CYP2E1 reactions
 Fatty-acid-related processes
 Cellular responses to stimuli
 Metallothionein-associated processes
 YAP1/WWTR1-associated transcriptional regulation
-Step 23: GO Enrichment Plot
+
+### Step 23: GO Enrichment Plot
+```
 library(ggplot2)
 
 ggplot(
@@ -727,15 +744,17 @@ ggplot(
         size = "Protein Count"
     ) +
     theme_minimal()
-
+```
 Save:
-
+```
 ggsave(
     "protein_enrichment/figures/STRING_GO_enrichment_dotplot.pdf",
     width = 10,
     height = 6
 )
-Step 24: Reactome Plot
+```
+### Step 24: Reactome Plot
+```
 top_reactome <- head(
     reactome[
         order(reactome$fdr),
@@ -764,26 +783,27 @@ ggplot(
         size = "Protein Count"
     ) +
     theme_minimal()
-
+```
 Save:
-
+```
 ggsave(
     "protein_enrichment/figures/STRING_Reactome_enrichment_dotplot.pdf",
     width = 10,
     height = 7
 )
-Step 25: DEG Expression Heatmap
+```
+### Step 25: DEG Expression Heatmap
 
 Load normalized counts:
-
+```
 normalized_counts <- read.csv(
     "protein_enrichment/input/normalized_counts_TBT_vs_DMSO.csv",
     row.names = 1,
     check.names = FALSE
 )
-
+```
 Create DEG expression matrix:
-
+```
 deg_gene_ids <- final_string_map$SYMBOL
 
 symbol_to_geneid <- setNames(
@@ -801,9 +821,9 @@ deg_counts <- normalized_counts[
     ,
     drop = FALSE
 ]
-
+```
 Rename:
-
+```
 rownames(deg_counts) <-
     final_protein_map$SYMBOL[
         match(
@@ -817,9 +837,9 @@ Log transform:
 log_counts <- log2(
     deg_counts + 1
 )
-
+```
 Z-score:
-
+```
 heatmap_matrix <- t(
     scale(
         t(log_counts)
@@ -865,7 +885,9 @@ Heatmap(
 )
 
 dev.off()
-Step 27: Integrate DEG Statistics and Network Centrality
+```
+### Step 27: Integrate DEG Statistics and Network Centrality
+```
 final_results <- final_string_map %>%
     dplyr::select(
         SYMBOL,
@@ -895,24 +917,25 @@ final_results$Direction <- ifelse(
     "Upregulated",
     "Downregulated"
 )
-
+```
 Rank:
-
+```
 final_results <- final_results[
     order(
         final_results$hub_score,
         decreasing = TRUE
     ),
 ]
-
+```
 Save:
-
+```
 write.csv(
     final_results,
     "protein_enrichment/results/FINAL_DEG_STRING_INTEGRATED_RESULTS.csv",
     row.names = FALSE
 )
-Step 28: Candidate Hub Proteins
+```
+### Step 28: Candidate Hub Proteins
 
 Candidate hubs were ranked according to network centrality.
 
@@ -928,7 +951,7 @@ Rank	Protein	log2FC	FDR	Hub Score
 7	Ank3	+2.91	0.0453	0.214
 
 Save:
-
+```
 candidate_hubs <- final_results[
     final_results$hub_score >=
         quantile(
@@ -943,8 +966,9 @@ write.csv(
     "protein_enrichment/results/FINAL_CANDIDATE_HUB_PROTEINS.csv",
     row.names = FALSE
 )
-Biological Interpretation
-1. Overall molecular response
+```
+### Biological Interpretation
+```text 1. Overall molecular response
 
 The protein-level analysis suggests that preconception TBT exposure is associated with coordinated changes in proteins involved in:
 
@@ -985,36 +1009,26 @@ These findings are consistent with activation or disruption of molecular systems
 However, enrichment alone does not demonstrate increased enzymatic activity.
 
 3. Metal and zinc homeostasis
-
-A significant biological theme was:
-
-Cellular zinc ion homeostasis
+A significant biological theme was: Cellular zinc ion homeostasis
 
 The proteins contributing to this pathway included:
-
 Mt1
 Mt2
 Slc39a8
 
 Both Mt1 and Mt2 are metallothionein-associated proteins, while Slc39a8 is associated with metal ion transport.
-
 This suggests that TBT exposure may influence cellular metal-handling mechanisms.
 
 The strong differential expression of Mt1:
-
 log2FC = -2.106
 FDR = 0.000238
-
 makes Mt1 an especially interesting candidate for further investigation.
 
 4. Metallothionein biology
 
 The enrichment analysis identified:
-
 Metallothionein
-Metal-thiolate cluster
-
-and related metal-binding processes.
+Metal-thiolate cluster and related metal-binding processes.
 
 Mt1 and Mt2 were repeatedly represented in these terms.
 
@@ -1027,23 +1041,19 @@ However, functional validation would be required to determine whether this repre
 5. Transcriptional regulation
 
 The analysis also identified pathways associated with:
-
 TEA domain
 YAP1/WWTR1 transcription
 RUNX3/YAP1-mediated transcription
 
 The major contributing proteins were:
-
 Tead1
 Tead4
 
 TEAD transcription factors are important regulators of gene expression and cellular responses.
-
 Their presence suggests that transcriptional regulatory networks may be altered following TBT exposure.
 
 6. Network hub proteins
 Cdkn1a
-
 Cdkn1a was the strongest network-central DEG:
 
 Degree = 16
@@ -1057,7 +1067,6 @@ Its high degree indicates many network connections, while its relatively high be
 Therefore, Cdkn1a represents the strongest candidate network hub in this analysis.
 
 Anpep
-
 Anpep had:
 
 Degree = 7
@@ -1068,12 +1077,10 @@ log2FC = +1.01
 Although its degree was lower than Cdkn1a, its high betweenness suggests that Anpep may occupy an important bridging position in the network.
 
 Mt1
-
 Mt1 showed:
 
 log2FC = -2.106
 FDR = 0.000238
-
 and was involved in multiple metal/zinc-related enrichment categories.
 
 Its network degree was low, meaning that it should not be interpreted as a classical high-connectivity hub.
@@ -1081,7 +1088,6 @@ Its network degree was low, meaning that it should not be interpreted as a class
 Instead, Mt1 is a biologically important DEG candidate because of its strong differential expression and repeated representation in functional enrichment.
 
 Pdk4
-
 Pdk4 was strongly downregulated:
 
 log2FC = -2.078
@@ -1093,24 +1099,11 @@ It may therefore represent a candidate connecting metabolic regulation with the 
 
 Important Interpretation Limitation
 
-The current analysis is computational and observational.
+The current analysis is computational and observational. Therefore, the results demonstrate: association rather than causation
 
-Therefore, the results demonstrate:
-
-association
-
-rather than:
-
-causation
-
-The identified hub proteins should be described as:
-
-candidate network hubs
-
-rather than confirmed therapeutic targets or causal regulators.
+The identified hub proteins should be described as:candidate network hubs rather than confirmed therapeutic targets or causal regulators.
 
 Experimental validation would be required using approaches such as:
-
 qPCR
 Western blotting
 targeted proteomics
