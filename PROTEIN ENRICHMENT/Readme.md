@@ -1129,7 +1129,21 @@ Among the DEGs, Cdkn1a and Anpep showed the highest network centrality, while Mt
 The combination of strong differential expression, network centrality, and functional enrichment identifies Cdkn1a, Anpep, Mt1, Mtarc1, Ncoa1, and Pdk4 as particularly interesting candidates for downstream biological validation.
 
 Reproducibility
-All analysis scripts are organized sequentially:
+All analysis scripts are organized sequentially
+
+Disclaimer
+
+Research Disclaimer
+
+The results presented in this project are based on computer analysis of biological data and are intended to identify patterns, possible biological relationships, and potential areas for further research.
+
+The findings, including identified genes, proteins, pathways, and network hubs, do not prove that a gene or protein directly causes a biological effect. They should be considered research findings that require further laboratory and experimental validation.
+
+The results may also vary depending on the quality of the data, analytical methods, software, and biological databases used.
+
+Therefore, these findings should not be used for medical diagnosis, treatment decisions, or other clinical purposes without appropriate scientific and clinical validation.
+
+
 
 ## Author
 
