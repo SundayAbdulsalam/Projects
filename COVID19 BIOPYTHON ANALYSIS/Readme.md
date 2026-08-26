@@ -298,14 +298,7 @@ COVID19-Genome-Analysis/
 └── README.md
 ```
 
-## How to Run the Project
 
-1. Clone or download the project files.
-2. Install the required dependencies.
-3. Open `covid19.ipynb` in Jupyter Notebook or VS Code.
-4. Select the correct Python environment.
-5. Run the notebook cells sequentially.
-6. Review the generated plots, sequence statistics, BLAST results, and protein structure visualization.
 
 ## Requirements
 
@@ -366,8 +359,6 @@ Interested in:
 •	Molecular biology 
 
 # Disclaimer
-
-This project was developed for **educational and research purposes only**. The analyses, results, visualizations, and interpretations produced by this project should not be considered medical, clinical, diagnostic, or professional advice.
 
 The genome and protein data used in this project are obtained from publicly available biological databases and resources. The accuracy and completeness of results depend on the quality of the source data, selected parameters, software versions, and computational methods used.
 
