@@ -90,15 +90,18 @@ GO / Reactome           Network expansion
                            |
                            v
               DEG + network integration
-Software and Packages
+```
+
+### Software and Packages
 R
 
-Recommended R version:
+### Recommended R version:
 
 R >= 4.3
 
-Required packages:
+### Required packages:
 
+``` bash
 install.packages(c(
     "dplyr",
     "ggplot2",
@@ -118,7 +121,7 @@ BiocManager::install(
         "ComplexHeatmap"
     )
 )
-
+```
 Load packages:
 
 library(STRINGdb)
@@ -129,7 +132,7 @@ library(ComplexHeatmap)
 Directory Setup
 
 Create the project directories:
-
+```
 dir.create(
     "protein_enrichment",
     showWarnings = FALSE
@@ -152,6 +155,7 @@ dir.create(
     recursive = TRUE,
     showWarnings = FALSE
 )
+```
 Step 1: Import Differential Expression Results
 
 The analysis begins with the significant DEGs identified from the DESeq2 analysis.
@@ -161,7 +165,7 @@ Expected input:
 DEG_TBT_vs_DMSO_significant.csv
 
 Example R code:
-
+```
 deg_results <- read.csv(
     "protein_enrichment/input/DEG_TBT_vs_DMSO_significant.csv",
     stringsAsFactors = FALSE
@@ -170,10 +174,11 @@ deg_results <- read.csv(
 head(deg_results)
 
 dim(deg_results)
-
+```
 The project contains:
 
 24 significant DEGs
+
 Step 2: Prepare STRINGdb
 
 STRINGdb was configured for:
@@ -185,28 +190,29 @@ STRING version: 12.0
 Initialize STRINGdb:
 
 library(STRINGdb)
-
+```
 string_db <- STRINGdb$new(
     version = "12.0",
     species = 10090,
     score_threshold = 400,
     input_directory = ""
 )
-
+```
 Check:
-
+```
 string_db$version
 string_db$species
-
+```
 Expected:
 
 [1] "12.0"
 
 [1] 10090
+
 Step 3: Map Genes to STRING Proteins
 
 The Entrez IDs from the DEG annotation were mapped to STRING protein identifiers.
-
+```
 test_mapping <- string_db$map(
     data.frame(
         ENTREZID = final_protein_map$ENTREZID
@@ -214,32 +220,32 @@ test_mapping <- string_db$map(
     "ENTREZID",
     removeUnmappedRows = FALSE
 )
-
+```
 Check mapping:
-
+```
 table(
     is.na(test_mapping$STRING_id)
 )
-
+```
 The initial mapping identified:
 
 10 directly mapped identifiers
 10 identifiers requiring additional STRING annotation
 
 The final protein mapping contained:
-
 20 proteins
+
 Step 4: Create Final STRING Protein Mapping
 
 The mapped and previously annotated proteins were combined:
-
+```
 final_string_map <- rbind(
     mapped_final,
     unmapped_final
 )
-
+```
 Check:
-
+```
 nrow(final_string_map)
 
 sum(
@@ -249,27 +255,29 @@ sum(
 length(
     unique(final_string_map$STRING_id)
 )
-
+```
 Final result:
-
 20 proteins
 20 unique STRING IDs
 0 missing STRING IDs
 
 Save:
-
+```
 write.csv(
     final_string_map,
     "protein_enrichment/results/STRING_protein_mapping.csv",
     row.names = FALSE
 )
+```
+
 Step 5: Retrieve STRING Protein Information
+```
 string_proteins <- string_db$get_proteins()
 
 head(string_proteins)
-
+```
 Verify that the mapped proteins are present:
-
+```
 hits <- unique(
     final_string_map$STRING_id
 )
@@ -277,19 +285,20 @@ hits <- unique(
 sum(
     hits %in% string_proteins$protein_external_id
 )
-
+```
 Expected:
-
 20
+
 Step 6: Obtain STRING Interaction Network
+```
 ppi <- string_db$get_interactions(
     hits
 )
-
+```
 Because some mapped proteins were not represented as vertices in the STRING interaction graph, the direct interaction table may not contain all proteins.
 
 Therefore the complete STRING graph was examined:
-
+```
 library(igraph)
 
 graph <- string_db$get_graph()
@@ -297,12 +306,15 @@ graph <- string_db$get_graph()
 vcount(graph)
 
 ecount(graph)
+```
 
 The STRING graph contained:
 
 10,640 vertices
 34,626 interactions
-Step 7: Identify STRING Proteins Present in the Graph
+
+### Step 7: Identify STRING Proteins Present in the Graph
+```
 graph_hits <- intersect(
     hits,
     V(graph)$name
@@ -311,38 +323,32 @@ graph_hits <- intersect(
 length(graph_hits)
 
 graph_hits
-
+```
 Result:
+12 DEG proteins were represented as vertices in the STRING graph.
 
-12 DEG proteins
-
-were represented as vertices in the STRING graph.
-
-Step 8: Construct the DEG PPI Subnetwork
+### Step 8: Construct the DEG PPI Subnetwork
+```
 ppi_graph <- induced_subgraph(
     graph,
     vids = graph_hits
 )
 
 vcount(ppi_graph)
-
 ecount(ppi_graph)
-
+```
 The direct DEG-only network contained:
-
 12 DEG proteins
 0 direct edges
 
 This indicates that the mapped DEGs did not form a sufficiently connected direct STRING subnetwork at the selected STRING graph threshold.
-
 Therefore, first-shell network expansion was performed.
 
-Step 9: Expand the Network
+### Step 9: Expand the Network
 
 The STRING network was expanded around the DEG proteins to identify interacting first-shell proteins.
-
 The expanded network was then annotated with protein names:
-
+```
 protein_annotation <- string_proteins[
     ,
     c(
@@ -355,9 +361,9 @@ colnames(protein_annotation) <- c(
     "STRING_id",
     "preferred_name"
 )
-
+```
 Network annotation:
-
+```
 expanded_edges_annotated <- expanded_edges %>%
     left_join(
         protein_annotation,
@@ -373,7 +379,9 @@ expanded_edges_annotated <- expanded_edges %>%
     rename(
         to_gene = preferred_name
     )
-Step 10: Remove Duplicate and Self Interactions
+```
+### Step 10: Remove Duplicate and Self Interactions
+```
 expanded_edges_clean <- expanded_edges_annotated[
     !duplicated(
         expanded_edges_annotated[
@@ -387,7 +395,7 @@ expanded_edges_clean <- expanded_edges_clean[
     expanded_edges_clean$from !=
         expanded_edges_clean$to,
 ]
-
+```
 Save:
 
 write.csv(
