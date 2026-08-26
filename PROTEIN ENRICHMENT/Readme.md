@@ -132,7 +132,7 @@ library(ComplexHeatmap)
 Directory Setup
 
 Create the project directories:
-```
+```bash
 dir.create(
     "protein_enrichment",
     showWarnings = FALSE
@@ -164,7 +164,7 @@ Expected input:
 DEG_TBT_vs_DMSO_significant.csv
 
 Example R code:
-```
+```bash
 deg_results <- read.csv(
     "protein_enrichment/input/DEG_TBT_vs_DMSO_significant.csv",
     stringsAsFactors = FALSE
@@ -186,7 +186,7 @@ Taxonomy ID: 10090
 STRING version: 12.0
 
 Initialize STRINGdb:
-```
+```bash
 library(STRINGdb)
 
 string_db <- STRINGdb$new(
@@ -197,7 +197,7 @@ string_db <- STRINGdb$new(
 )
 ```
 Check:
-```
+```bash
 string_db$version
 string_db$species
 ```
@@ -210,7 +210,7 @@ Expected:
 ### Step 3: Map Genes to STRING Proteins
 
 The Entrez IDs from the DEG annotation were mapped to STRING protein identifiers.
-```
+```bash
 test_mapping <- string_db$map(
     data.frame(
         ENTREZID = final_protein_map$ENTREZID
@@ -220,7 +220,7 @@ test_mapping <- string_db$map(
 )
 ```
 Check mapping:
-```
+```bash
 table(
     is.na(test_mapping$STRING_id)
 )
@@ -236,14 +236,14 @@ The final protein mapping contained:
 ### Step 4: Create Final STRING Protein Mapping
 
 The mapped and previously annotated proteins were combined:
-```
+```bash
 final_string_map <- rbind(
     mapped_final,
     unmapped_final
 )
 ```
 Check:
-```
+```bash
 nrow(final_string_map)
 
 sum(
@@ -260,7 +260,7 @@ Final result:
 0 missing STRING IDs
 
 Save:
-```
+```bash
 write.csv(
     final_string_map,
     "protein_enrichment/results/STRING_protein_mapping.csv",
@@ -269,13 +269,13 @@ write.csv(
 ```
 
 ### Step 5: Retrieve STRING Protein Information
-```
+```bash
 string_proteins <- string_db$get_proteins()
 
 head(string_proteins)
 ```
 Verify that the mapped proteins are present:
-```
+```bash
 hits <- unique(
     final_string_map$STRING_id
 )
@@ -288,7 +288,7 @@ Expected:
 20
 
 ### Step 6: Obtain STRING Interaction Network
-```
+```bash
 ppi <- string_db$get_interactions(
     hits
 )
@@ -296,7 +296,7 @@ ppi <- string_db$get_interactions(
 Because some mapped proteins were not represented as vertices in the STRING interaction graph, the direct interaction table may not contain all proteins.
 
 Therefore the complete STRING graph was examined:
-```
+```bash
 library(igraph)
 
 graph <- string_db$get_graph()
@@ -312,7 +312,7 @@ The STRING graph contained:
 34,626 interactions
 
 ### Step 7: Identify STRING Proteins Present in the Graph
-```
+```bash
 graph_hits <- intersect(
     hits,
     V(graph)$name
@@ -326,7 +326,7 @@ Result:
 12 DEG proteins were represented as vertices in the STRING graph.
 
 ### Step 8: Construct the DEG PPI Subnetwork
-```
+```bash
 ppi_graph <- induced_subgraph(
     graph,
     vids = graph_hits
@@ -346,7 +346,7 @@ Therefore, first-shell network expansion was performed.
 
 The STRING network was expanded around the DEG proteins to identify interacting first-shell proteins.
 The expanded network was then annotated with protein names:
-```
+```bash
 protein_annotation <- string_proteins[
     ,
     c(
@@ -361,7 +361,7 @@ colnames(protein_annotation) <- c(
 )
 ```
 Network annotation:
-```
+```bash
 expanded_edges_annotated <- expanded_edges %>%
     left_join(
         protein_annotation,
@@ -379,7 +379,7 @@ expanded_edges_annotated <- expanded_edges %>%
     )
 ```
 ### Step 10: Remove Duplicate and Self Interactions
-```
+```bash
 expanded_edges_clean <- expanded_edges_annotated[
     !duplicated(
         expanded_edges_annotated[
@@ -395,7 +395,7 @@ expanded_edges_clean <- expanded_edges_clean[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     expanded_edges_clean,
     "protein_enrichment/results/STRING_expanded_PPI_edges_clean.csv",
@@ -404,7 +404,7 @@ write.csv(
 ```
 
 ### Step 11: Construct the Clean Network
-```
+```bash
 clean_graph <- graph_from_data_frame(
     expanded_edges_clean[
         ,
@@ -414,17 +414,16 @@ clean_graph <- graph_from_data_frame(
 )
 ```
 Network size:
-
+```bash
 vcount(clean_graph)
-
 ecount(clean_graph)
-
+```
 Final expanded network:
 47 proteins
 128 unique interactions
 
 ### Step 12: Identify Connected Components
-```
+```bash
 components_info <- components(
     clean_graph
 )
@@ -442,7 +441,7 @@ The network contained:
 Therefore, the largest connected component contained: 43 proteins
 
 ### Step 13: Extract the Giant Component
-```
+```bash
 largest_component <- which.max(
     components_info$csize
 )
@@ -458,7 +457,7 @@ giant_graph <- induced_subgraph(
 )
 ```
 Check:
-```
+```bash
 vcount(giant_graph)
 
 ecount(giant_graph)
@@ -468,14 +467,14 @@ This produces the principal 43-protein interaction network.
 ### Step 14: Calculate Network Centrality
 
 Degree:
-```
+```bash
 giant_degree <- degree(
     giant_graph,
     mode = "all"
 )
 ```
 Betweenness:
-```
+```bash
 giant_betweenness <- betweenness(
     giant_graph,
     directed = FALSE,
@@ -483,14 +482,14 @@ giant_betweenness <- betweenness(
 )
 ```
 Closeness:
-```
+```bash
 giant_closeness <- closeness(
     giant_graph,
     normalized = TRUE
 )
 ```
 Create hub table:
-```
+```bash
 giant_hubs <- data.frame(
     STRING_id = names(giant_degree),
     degree = as.numeric(giant_degree),
@@ -499,7 +498,7 @@ giant_hubs <- data.frame(
 )
 ```
 ### Step 15: Annotate Network Proteins
-```
+```bash
 giant_hubs <- giant_hubs %>%
     left_join(
         protein_annotation,
@@ -507,7 +506,7 @@ giant_hubs <- giant_hubs %>%
     )
 ```
 Identify DEGs:
-```
+```bash
 giant_hubs$DEG <- ifelse(
     giant_hubs$STRING_id %in% hits,
     "DEG",
@@ -517,7 +516,7 @@ giant_hubs$DEG <- ifelse(
 ### Step 16: Calculate Hub Score
 
 Centrality measures were normalized:
-```
+```bash
 giant_hubs$degree_norm <-
     giant_hubs$degree /
     max(
@@ -540,7 +539,7 @@ giant_hubs$closeness_norm <-
     )
 ```
 Hub score:
-```
+```bash
 giant_hubs$hub_score <- rowMeans(
     giant_hubs[
         ,
@@ -554,7 +553,7 @@ giant_hubs$hub_score <- rowMeans(
 )
 ```
 Rank:
-```
+```bash
 giant_hubs <- giant_hubs[
     order(
         giant_hubs$hub_score,
@@ -563,7 +562,7 @@ giant_hubs <- giant_hubs[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     giant_hubs,
     "protein_enrichment/results/STRING_giant_component_hub_analysis.csv",
@@ -572,7 +571,7 @@ write.csv(
 ```
 
 ### Step 17: Identify DEG Network Hubs
-```
+```bash
 giant_deg_hubs <- giant_hubs[
     giant_hubs$DEG == "DEG",
 ]
@@ -586,7 +585,7 @@ giant_deg_hubs <- giant_deg_hubs[
 ```
 
 ### Step 18: Integrate Network Results with DESeq2
-```
+```bash
 giant_deg_hubs_full <- giant_deg_hubs %>%
     left_join(
         final_string_map[
@@ -604,7 +603,7 @@ giant_deg_hubs_full <- giant_deg_hubs %>%
     )
 ```
 Save:
-```
+```bash
 write.csv(
     giant_deg_hubs_full,
     "protein_enrichment/results/STRING_DEG_giant_component_hubs.csv",
@@ -614,7 +613,7 @@ write.csv(
 ### Step 19: PPI Enrichment
 
 STRING PPI enrichment was calculated using:
-```
+```bash
 ppi_enrichment <- string_db$get_ppi_enrichment(
     hits
 )
@@ -626,7 +625,7 @@ Enrichment statistic = 0.0225
 Lambda = 1
 
 Save:
-```
+```bash
 write.csv(
     data.frame(
         enrichment = ppi_enrichment$enrichment,
@@ -638,13 +637,13 @@ write.csv(
 )
 ```
 ### Step 20: Functional Enrichment
-```
+```bash
 enrichment <- string_db$get_enrichment(
     hits
 )
 ```
 Significant terms:
-```
+```bash
 enrichment_sig <- enrichment[
     enrichment$fdr < 0.05,
 ]
@@ -656,7 +655,7 @@ enrichment_sig <- enrichment_sig[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     enrichment_sig,
     "protein_enrichment/results/STRING_significant_enrichment.csv",
@@ -664,7 +663,7 @@ write.csv(
 )
 ```
 ### Step 21: GO Biological Process
-```
+```bash
 go_process <- enrichment_sig[
     enrichment_sig$category == "Process",
 ]
@@ -676,7 +675,7 @@ go_process <- go_process[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     go_process,
     "protein_enrichment/results/STRING_GO_Biological_Process.csv",
@@ -690,7 +689,7 @@ Cellular response to chemical stimulus
 ### Step 22: Reactome Enrichment
 
 STRING Reactome terms are identified using the RCTM category.
-```
+```bash
 reactome <- enrichment_sig[
     enrichment_sig$category == "RCTM",
 ]
@@ -702,7 +701,7 @@ reactome <- reactome[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     reactome,
     "protein_enrichment/results/STRING_Reactome_enrichment.csv",
@@ -720,7 +719,7 @@ Metallothionein-associated processes
 YAP1/WWTR1-associated transcriptional regulation
 
 ### Step 23: GO Enrichment Plot
-```
+```bash
 library(ggplot2)
 
 ggplot(
@@ -746,7 +745,7 @@ ggplot(
     theme_minimal()
 ```
 Save:
-```
+```bash
 ggsave(
     "protein_enrichment/figures/STRING_GO_enrichment_dotplot.pdf",
     width = 10,
@@ -754,7 +753,7 @@ ggsave(
 )
 ```
 ### Step 24: Reactome Plot
-```
+```bash
 top_reactome <- head(
     reactome[
         order(reactome$fdr),
@@ -785,7 +784,7 @@ ggplot(
     theme_minimal()
 ```
 Save:
-```
+```bash
 ggsave(
     "protein_enrichment/figures/STRING_Reactome_enrichment_dotplot.pdf",
     width = 10,
@@ -795,7 +794,7 @@ ggsave(
 ### Step 25: DEG Expression Heatmap
 
 Load normalized counts:
-```
+```bash
 normalized_counts <- read.csv(
     "protein_enrichment/input/normalized_counts_TBT_vs_DMSO.csv",
     row.names = 1,
@@ -803,7 +802,7 @@ normalized_counts <- read.csv(
 )
 ```
 Create DEG expression matrix:
-```
+```bash
 deg_gene_ids <- final_string_map$SYMBOL
 
 symbol_to_geneid <- setNames(
@@ -823,7 +822,7 @@ deg_counts <- normalized_counts[
 ]
 ```
 Rename:
-```
+```bash
 rownames(deg_counts) <-
     final_protein_map$SYMBOL[
         match(
@@ -839,7 +838,7 @@ log_counts <- log2(
 )
 ```
 Z-score:
-```
+```bash
 heatmap_matrix <- t(
     scale(
         t(log_counts)
@@ -887,7 +886,7 @@ Heatmap(
 dev.off()
 ```
 ### Step 27: Integrate DEG Statistics and Network Centrality
-```
+```bash
 final_results <- final_string_map %>%
     dplyr::select(
         SYMBOL,
@@ -909,9 +908,9 @@ final_results <- final_string_map %>%
             ),
         by = "STRING_id"
     )
-
+```
 Add expression direction:
-
+```bash
 final_results$Direction <- ifelse(
     final_results$log2FoldChange > 0,
     "Upregulated",
@@ -919,7 +918,7 @@ final_results$Direction <- ifelse(
 )
 ```
 Rank:
-```
+```bash
 final_results <- final_results[
     order(
         final_results$hub_score,
@@ -928,7 +927,7 @@ final_results <- final_results[
 ]
 ```
 Save:
-```
+```bash
 write.csv(
     final_results,
     "protein_enrichment/results/FINAL_DEG_STRING_INTEGRATED_RESULTS.csv",
@@ -951,7 +950,7 @@ Rank	Protein	log2FC	FDR	Hub Score
 7	Ank3	+2.91	0.0453	0.214
 
 Save:
-```
+```bash
 candidate_hubs <- final_results[
     final_results$hub_score >=
         quantile(
