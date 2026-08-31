@@ -1,0 +1,7 @@
+sample_id,fastq_1,fastq_2
+SRR39441559,raw_data/SRR39441559_1.fastq,raw_data/SRR39441559_2.fastq
+SRR39441572,raw_data/SRR39441572_1.fastq,raw_data/SRR39441572_2.fastq
+SRR39441613,raw_data/SRR39441613_1.fastq,raw_data/SRR39441613_2.fastq
+SRR39441614,raw_data/SRR39441614_1.fastq,raw_data/SRR39441614_2.fastq
+SRR39441617,raw_data/SRR39441617_1.fastq,raw_data/SRR39441617_2.fastq
+SRR39441622,raw_data/SRR39441622_1.fastq,raw_data/SRR39441622_2.fastq
